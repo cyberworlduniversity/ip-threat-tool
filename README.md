@@ -1,5 +1,15 @@
 # 🛡 IP Threat Intelligence Tool
 
+
+## Get this repository
+
+Clone the current project (this repository's canonical GitHub URL), then follow the installation and usage steps below.
+
+```bash
+git clone https://github.com/cyberworlduniversity/ip-threat-tool.git
+cd ip-threat-tool
+```
+
 A sleek, cyberpunk-styled web application for analyzing IP addresses — built with Node.js and Express.
 
 ## ✨ Features
