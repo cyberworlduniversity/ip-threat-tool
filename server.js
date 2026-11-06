@@ -54,20 +54,37 @@ app.get('/api/lookup/:ip', async (req, res) => {
   }
 
   try {
-    const endpoint = new URL(`https://ip-api.com/json/${encodeURIComponent(ip)}`);
-    endpoint.searchParams.set(
-      'fields',
-      'status,message,country,countryCode,region,regionName,city,zip,lat,lon,timezone,isp,org,as,asname,reverse,mobile,proxy,hosting,query'
-    );
+    const endpoint = new URL(`https://ipwho.is/${encodeURIComponent(ip)}`);
     const response = await fetch(endpoint, { signal: AbortSignal.timeout(8000) });
     if (!response.ok) {
       return res.status(502).json({ error: 'IP intelligence provider is unavailable.' });
     }
-    const data = await response.json();
-    if (data.status !== 'success') {
+    const providerData = await response.json();
+    if (providerData.success !== true) {
       return res.status(502).json({ error: 'IP intelligence lookup failed.' });
     }
 
+    const connection = providerData.connection || {};
+    const security = providerData.security || {};
+    const timezone = providerData.timezone || {};
+    const data = {
+      query: providerData.ip || ip,
+      country: providerData.country,
+      countryCode: providerData.country_code,
+      regionName: providerData.region,
+      city: providerData.city,
+      zip: providerData.postal,
+      lat: providerData.latitude,
+      lon: providerData.longitude,
+      timezone: timezone.id,
+      isp: connection.isp,
+      org: connection.org,
+      as: connection.asn,
+      reverse: providerData.connection?.domain,
+      mobile: Boolean(security.mobile),
+      proxy: Boolean(security.proxy || security.vpn || security.tor),
+      hosting: Boolean(security.hosting),
+    };
     data.threatScore = calculateThreatScore(data);
     data.riskLevel = getRiskLevel(data.threatScore);
     res.set('Cache-Control', 'no-store');
