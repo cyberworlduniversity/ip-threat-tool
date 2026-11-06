@@ -96,3 +96,49 @@ This tool is for educational and informational purposes only. Use responsibly an
 ## 📄 License
 
 MIT License
+
+
+## Repository Quick Start
+
+Clone the canonical repository:
+
+```bash
+git clone https://github.com/cyberworlduniversity/ip-threat-tool.git
+cd ip-threat-tool
+```
+
+### Requirements and installation
+
+- Node.js 18+
+
+```bash
+npm install
+```
+
+### Start the application
+
+```bash
+npm start
+```
+
+Open http://localhost:3000 in a browser.
+
+### Build / validation
+
+Check that dependencies install cleanly and that the application starts without runtime errors. No automated test script is currently declared in package.json.
+
+The IP lookup relies on a third-party geolocation/threat data service; do not treat its result as a definitive attribution.
+
+### Application flow
+
+```mermaid
+flowchart TD
+    A[Open application] --> B[Load frontend and server]
+    B --> C[Accept user input]
+    C --> D{Input valid?}
+    D -- No --> E[Show validation message]
+    D -- Yes --> F[Run ip threat tool analysis]
+    F --> G[Render results]
+    G --> H[Finish]
+    E --> H
+```
